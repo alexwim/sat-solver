@@ -1,17 +1,17 @@
 #include <string>
 #include <cstdlib>
+#include <sstream>
 
 #include "dimacs.h"
 #include "defs.h"
 
 CNF DimacsParser::readCNF(std::istream& is) {
-	CNF cnf();
-
+	CNF cnf;
 	LITERAL lit;
 
-	do {
+	do {// For each block
 		is.read(buffer.data(), buffer.size());
-		for (idx = 0; idx < is.gcount(); ++idx) {
+		for (idx = 0; idx < is.gcount(); ) {
 			// Comment
 			if ('c' == buffer[idx]) {
 				eat('c');
@@ -35,26 +35,29 @@ CNF DimacsParser::readCNF(std::istream& is) {
 			else {
 				eatAll(' ');
 				while((lit = atoi(&buffer[idx])) != 0) {
-					std::cout << lit << ' ';
+					clause.push_back(lit);
 					eatUntil(' ');
 					eatAll(' ');
 				}
-				eatLine();
-				std::cout << std::endl;
+				eat('0');
+				cnf.push_back(clause);
+				clause.clear();
+				nbClausesSeen++;
+
+				eatAll(' ');
+				eatAll('\n');
 			}
 		}
-	} while(1);
+	} while(nbClausesSeen < nbClauses);
 
 	return cnf;
 }
 
 void DimacsParser::eat(char c) {
 	if (c != buffer[idx]) {
-		std::string err;
-		err += "Parsing error at " + idx;
-		err += ": expected '" + c;
-		err += "'";
-		throw err;
+		std::ostringstream err;
+		err << "Parsing error at char " << idx << ": expected '" << c << "', got '" << buffer[idx] << "'";
+		throw err.str();
 	}
 	++idx;
 }
@@ -73,5 +76,5 @@ void DimacsParser::eatUntil(char c) {
 
 void DimacsParser::eatLine() {
 	eatUntil('\n');
-	eat('\n');
+	eatAll('\n');
 }

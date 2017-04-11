@@ -8,7 +8,7 @@
 
 class DimacsParser {
 public:
-	DimacsParser(): buffer(BUFFER_SIZE,0) {}
+	DimacsParser(): buffer(BUFFER_SIZE,0), nbVar(0), nbClauses(0), nbClausesSeen(0), idx(0) {}
 
 	CNF readCNF(std::istream&);
 
@@ -22,8 +22,10 @@ private:
 private:
 	std::vector<char> buffer;
 	int nbVar;
-	int nbClauses, nbclausesSeen;
+	int nbClauses, nbClausesSeen;
 	int idx;
+
+	CLAUSE clause;
 
 	static const int BUFFER_SIZE = 1024;
 };
