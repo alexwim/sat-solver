@@ -8,22 +8,29 @@
 
 class DimacsParser {
 public:
-	DimacsParser(): buffer(BUFFER_SIZE,0), nbVar(0), nbClauses(0), nbClausesSeen(0), idx(0) {}
+	DimacsParser(std::istream &o): is(o), buffer(BUFFER_SIZE,0), nbVar(-1), nbClauses(-1), nbClausesSeen(0), idx(0), lineSize(0)
+		{}
 
-	CNF readCNF(std::istream&);
+	CNF readCNF();
 
 private:
 	// Helpers
 	void eat(char);
 	void eatAll(char);
 	void eatUntil(char);
-	void eatLine();
+
+	// Load line only if we've reached the end of the current line
+	void loadLineIfNeeded();
+	// Forces a line load
+	void loadLine();
 
 private:
+	std::istream &is;
 	std::vector<char> buffer;
 	int nbVar;
 	int nbClauses, nbClausesSeen;
 	int idx;
+	int lineSize;
 
 	CLAUSE clause;
 

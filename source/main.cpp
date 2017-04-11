@@ -8,11 +8,11 @@
 #define BUFFER_SIZE 1024
 
 int main(int argc, char **argv) {
-	DimacsParser dp;
+	DimacsParser dp(std::cin);
 	CNF cnf;
 	
 	try{
-		cnf = dp.readCNF(std::cin);
+		cnf = dp.readCNF();
 	} catch (std::string &msg) {
 		std::cerr << msg << std::endl;
 	}

@@ -5,50 +5,47 @@
 #include "dimacs.h"
 #include "defs.h"
 
-CNF DimacsParser::readCNF(std::istream& is) {
+CNF DimacsParser::readCNF() {
 	CNF cnf;
 	LITERAL lit;
 
+	loadLineIfNeeded();
+
 	do {// For each block
-		is.read(buffer.data(), buffer.size());
-		for (idx = 0; idx < is.gcount(); ) {
-			// Comment
-			if ('c' == buffer[idx]) {
-				eat('c');
-				eatLine();
-			}
-			// Parameters
-			else if ('p' == buffer[idx]) {
-				eat('p');
-				eatAll(' ');
-				eat('c');
-				eat('n');
-				eat('f');
-				eatAll(' ');
-				nbVar = atoi(&buffer[idx]);
+		// Comment
+		if ('c' == buffer[idx]) {
+			loadLine();
+		}
+		// Parameters
+		else if ('p' == buffer[idx]) {
+			eat('p');
+			eatAll(' ');
+			eat('c');
+			eat('n');
+			eat('f');
+			eatAll(' ');
+			nbVar = atoi(&buffer[idx]);
+			eatUntil(' ');
+			eatAll(' ');
+			nbClauses = atoi(&buffer[idx]);
+			loadLine();
+		}
+		// Clause
+		else {
+			eatAll(' ');
+			while((lit = atoi(&buffer[idx])) != 0) {
+				clause.push_back(lit);
 				eatUntil(' ');
 				eatAll(' ');
-				nbClauses = atoi(&buffer[idx]);
-				eatLine();
 			}
-			// Clause
-			else {
-				eatAll(' ');
-				while((lit = atoi(&buffer[idx])) != 0) {
-					clause.push_back(lit);
-					eatUntil(' ');
-					eatAll(' ');
-				}
-				eat('0');
-				cnf.push_back(clause);
-				clause.clear();
-				nbClausesSeen++;
+			eat('0');
+			cnf.push_back(clause);
+			clause.clear();
+			nbClausesSeen++;
 
-				eatAll(' ');
-				eatAll('\n');
-			}
+			eatAll(' ');
 		}
-	} while(nbClausesSeen < nbClauses);
+	} while(nbClauses < 0 || nbClausesSeen < nbClauses);
 
 	return cnf;
 }
@@ -60,21 +57,31 @@ void DimacsParser::eat(char c) {
 		throw err.str();
 	}
 	++idx;
+	loadLineIfNeeded();
 }
 
 void DimacsParser::eatAll(char c) {
+	loadLineIfNeeded();
 	while (c == buffer[idx]) {
 		eat(c);
 	}
 }
 
 void DimacsParser::eatUntil(char c) {
+	loadLineIfNeeded();
 	while (c != buffer[idx]) {
 		eat(buffer[idx]);
 	}
 }
 
-void DimacsParser::eatLine() {
-	eatUntil('\n');
-	eatAll('\n');
+void DimacsParser::loadLineIfNeeded() {
+	if (idx >= lineSize-1) {
+		loadLine();
+	}
+}
+
+void DimacsParser::loadLine() {
+	is.getline(buffer.data(), buffer.size());
+	lineSize = is.gcount();
+	idx = 0;
 }
