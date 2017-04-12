@@ -9,7 +9,7 @@ CNF DimacsParser::readCNF() {
 	CNF cnf;
 	LITERAL lit;
 
-	loadLineIfNeeded();
+	loadLine();
 
 	do {// For each block
 		// Comment
