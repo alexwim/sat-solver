@@ -3,6 +3,7 @@
 #include <string>
 
 #include "dimacs.h"
+#include "cdcl.h"
 #include "defs.h"
 
 #define BUFFER_SIZE 1024
@@ -13,6 +14,7 @@ int main(int argc, char **argv) {
 	
 	try{
 		cnf = dp.readCNF();
+		std::cout << (cdcl(cnf) ? "SAT" : "UNSAT") << std::endl;
 	} catch (std::string &msg) {
 		std::cerr << msg << std::endl;
 	}
