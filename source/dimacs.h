@@ -12,7 +12,7 @@ public:
 	DimacsParser(std::istream &o): is(o), buffer(BUFFER_SIZE,0), nbVar(-1), nbClauses(-1), nbClausesSeen(0), idx(0), lineSize(0)
 		{}
 
-	CNF* readCNF();
+	CNF readCNF();
 
 private:
 	// Helpers

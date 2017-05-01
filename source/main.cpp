@@ -11,7 +11,7 @@
 
 int main(int argc, char **argv) {
 	DimacsParser dp(std::cin);
-	CNF *cnf;
+	CNF cnf;
 	
 	try{
 		cnf = dp.readCNF();
@@ -20,9 +20,9 @@ int main(int argc, char **argv) {
 		std::cerr << msg << std::endl;
 	}
 
-	for (int i(0); i < cnf->nbClauses(); ++i) {
-		for (int j(0); j < (*cnf)[i].size(); ++j) {
-			std::cout << (*cnf)[i][j] << ' ';
+	for (int i(0); i < cnf.nbClauses(); ++i) {
+		for (int j(0); j < cnf[i].size(); ++j) {
+			std::cout << cnf[i][j] << ' ';
 		}
 		std::cout << std::endl;
 	}

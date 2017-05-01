@@ -7,13 +7,15 @@
 
 class CNF {
 public:
-	CNF(int nvars_o): nvars(nvars_o) { }
+	CNF(): nvars(0) { }
 
-	void conjoin(CLAUSE c) { clauses.push_back(c); }
-	int nbClauses() { return clauses.size(); }
-	int nbVars() { return nvars; }
+	void conjoin(CLAUSE);
+	void setNbVars(int);
 
-	CLAUSE operator[](int idx) { return clauses.at(idx); }
+	int nbClauses();
+	int nbVars();
+
+	CLAUSE operator[](int);
 
 private:
 	std::vector<CLAUSE> clauses;

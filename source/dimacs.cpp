@@ -6,8 +6,8 @@
 #include "defs.h"
 #include "cnf.h"
 
-CNF* DimacsParser::readCNF() {
-	CNF *cnf;
+CNF DimacsParser::readCNF() {
+	CNF cnf;
 	LITERAL lit;
 
 	loadLine();
@@ -26,7 +26,7 @@ CNF* DimacsParser::readCNF() {
 			eat('f');
 			eatAll(' ');
 			nbVar = atoi(&buffer[idx]);
-			cnf = new CNF(nbVar);
+			cnf.setNbVars(nbVar);
 			eatUntil(' ');
 			eatAll(' ');
 			nbClauses = atoi(&buffer[idx]);
@@ -41,7 +41,7 @@ CNF* DimacsParser::readCNF() {
 				eatAll(' ');
 			}
 			eat('0');
-			cnf->conjoin(clause);
+			cnf.conjoin(clause);
 			clause.clear();
 			nbClausesSeen++;
 

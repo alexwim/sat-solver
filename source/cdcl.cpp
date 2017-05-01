@@ -3,7 +3,7 @@
 #include "cdcl.h"
 #include "defs.h"
 
-bool unitResolution(CNF *cnf, std::vector<CLAUSE> learnedClauses, std::vector<LITERAL> decisionSequence) {
+bool unitResolution(CNF &cnf, std::vector<CLAUSE> learnedClauses, std::vector<LITERAL> decisionSequence) {
 	return true;
 }
 
@@ -11,7 +11,7 @@ LITERAL getNextLiteral() {
 	return 0;
 }
 
-bool cdcl(CNF *cnf) {
+bool cdcl(CNF &cnf) {
 	std::vector<LITERAL> decisionSequence;
 	std::vector<CLAUSE> learnedClauses;
 
