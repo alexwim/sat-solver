@@ -20,6 +20,9 @@ public:
 private:
 	std::vector<CLAUSE> clauses;
 	int nvars;
+
+	// Map from variable to clause idx
+	std::vector<std::vector<int> > watcher1,watcher2;
 };
 
 #endif
